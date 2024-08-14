@@ -1,8 +1,10 @@
 import js
 import pyodide
 
+__version__ = '1.2.0'
+
 script = '''
-(size, frame) => {
+(width, height, frame) => {
     const backdrop = document.createElement('div');
     backdrop.style.position = 'fixed';
     backdrop.style.top = '0';
@@ -19,8 +21,8 @@ script = '''
     const canvas = document.createElement('canvas');
     canvas.id = 'canvas';
     canvas.tabindex = 1;
-    canvas.width = size[0];
-    canvas.height = size[1];
+    canvas.width = width;
+    canvas.height = height;
     canvas.style.maxWidth = `${100 * window.devicePixelRatio}vw`;
     canvas.style.maxHeight = `${100 * window.devicePixelRatio}vh`;
     canvas.style.transform = `scale(calc(1 / ${window.devicePixelRatio}))`;
@@ -90,15 +92,15 @@ script = '''
 
 
 class WebWindow:
-    def __init__(self, size):
-        self.size = size
+    def __init__(self, width, height):
+        self.size = (width, height)
         callback = js.window.eval(script)
 
         def frame():
             if self.render:
                 self.render()
 
-        self.state = callback(size, pyodide.ffi.create_proxy(frame))
+        self.state = callback(width, height, pyodide.ffi.create_proxy(frame))
         self.canvas = self.state.canvas
         self.gl = self.state.gl
 
