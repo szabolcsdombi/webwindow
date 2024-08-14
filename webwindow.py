@@ -3,12 +3,29 @@ import pyodide
 
 script = '''
 (size, frame) => {
+    const backdrop = document.createElement('div');
+    backdrop.style.position = 'fixed';
+    backdrop.style.top = '0';
+    backdrop.style.left = '0';
+    backdrop.style.width = '100vw';
+    backdrop.style.height = '100vh';
+    backdrop.style.backgroundColor = 'black';
+    backdrop.style.display = 'flex';
+    backdrop.style.justifyContent = 'center';
+    backdrop.style.alignItems = 'center';
+    backdrop.style.overflow = 'hidden';
+    document.body.appendChild(backdrop);
+
     const canvas = document.createElement('canvas');
     canvas.id = 'canvas';
     canvas.tabindex = 1;
     canvas.width = size[0];
     canvas.height = size[1];
-    document.body.appendChild(canvas);
+    canvas.style.maxWidth = `${100 * window.devicePixelRatio}vw`;
+    canvas.style.maxHeight = `${100 * window.devicePixelRatio}vh`;
+    canvas.style.transform = `scale(calc(1 / ${window.devicePixelRatio}))`;
+    canvas.style.aspectRatio = `${canvas.width} / ${canvas.height}`;
+    backdrop.appendChild(canvas);
 
     const gl = canvas.getContext('webgl2', {
         powerPreference: 'high-performance',
@@ -49,8 +66,8 @@ script = '''
 
     window.addEventListener('mousemove', (evt) => {
         const rect = canvas.getBoundingClientRect();
-        state.mouse[0] = evt.clientX - rect.left;
-        state.mouse[1] = evt.clientY - rect.top;
+        state.mouse[0] = Math.floor((evt.clientX - rect.left) * canvas.width / rect.width);
+        state.mouse[1] = Math.floor((evt.clientY - rect.top) * canvas.height / rect.height);
     });
 
     let last_timestamp = null;
