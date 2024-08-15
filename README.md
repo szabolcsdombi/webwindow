@@ -1,8 +1,8 @@
 # WebWindow
 
 WebWindow is a lightweight window implementation for Python,
-developed primarily to support the [ZenGL](zengl.readthedocs.io/) documentation,
-and it can be easily deployed with [Pyodide](https://pyodide.org/) or [PyScript](https://pyscript.com/).
+developed primarily to support the [ZenGL](https://zengl.readthedocs.io/) documentation,
+and it can be easily deployed with [Pyodide](https://pyodide.org/) or [PyScript](https://pyscript.com/)
 
 ## Examples
 
@@ -17,8 +17,8 @@ packages = ["zengl", "webwindow"]
 ```
 
 ```py
-from webwindow import WebWindow
 import zengl
+from webwindow import WebWindow
 
 window = WebWindow(600, 400)
 ctx = zengl.context()
@@ -31,4 +31,4 @@ def render():
 
 ## License
 
-Licensed under the [MIT License](LICENSE).
+Licensed under the [MIT License](LICENSE)
