@@ -5,7 +5,7 @@ with open('README.md') as readme:
 
 setup(
     name='webwindow',
-    version='1.2.0',
+    version='1.2.1',
     py_modules=['webwindow'],
     license='MIT',
     platforms=['web'],

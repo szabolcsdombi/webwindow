@@ -1,7 +1,7 @@
 import js
 import pyodide
 
-__version__ = '1.2.0'
+__version__ = '1.2.1'
 
 script = '''
 (width, height, frame) => {
