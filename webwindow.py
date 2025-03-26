@@ -1,5 +1,5 @@
-import js
-import pyodide
+import js  # type: ignore
+import pyodide  # type: ignore
 
 __version__ = '1.2.1'
 
@@ -19,6 +19,7 @@ script = '''
     document.body.appendChild(backdrop);
 
     const canvas = document.createElement('canvas');
+    canvas.oncontextmenu = () => false;
     canvas.id = 'canvas';
     canvas.tabindex = 1;
     canvas.width = width;
@@ -168,6 +169,14 @@ script = '''
         F24: 'f24',
     };
 
+    const mouseInCanvasBounds = (evt) => {
+        const rect = canvas.getBoundingClientRect();
+        return (
+            evt.clientX >= rect.left && evt.clientX <= rect.right 
+            && evt.clientY >= rect.top && evt.clientY <= rect.bottom
+        );
+    }
+
     window.addEventListener('keydown', (evt) => {
         state.keys.add(keys[evt.code]);
     });
@@ -177,7 +186,9 @@ script = '''
     });
 
     window.addEventListener('mousedown', (evt) => {
-        state.keys.add(mouseKeys[evt.button]);
+        if (mouseInCanvasBounds(evt)) {
+            state.keys.add(mouseKeys[evt.button]);
+        }
     });
 
     window.addEventListener('mouseup', (evt) => {
@@ -186,8 +197,10 @@ script = '''
 
     window.addEventListener('mousemove', (evt) => {
         const rect = canvas.getBoundingClientRect();
-        state.mouse[0] = Math.floor((evt.clientX - rect.left) * canvas.width / rect.width);
-        state.mouse[1] = Math.floor((evt.clientY - rect.top) * canvas.height / rect.height);
+        if (mouseInCanvasBounds(evt)) {
+            state.mouse[0] = Math.floor((evt.clientX - rect.left) * canvas.width / rect.width);
+            state.mouse[1] = Math.floor((evt.clientY - rect.top) * canvas.height / rect.height);
+        }
     });
 
     let last_timestamp = null;
